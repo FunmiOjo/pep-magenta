@@ -2,10 +2,8 @@
 // https://github.com/tensorflow/tfjs/issues/424
 // https://github.com/tensorflow/magenta-js/blob/master/music/demos/common.ts
 const improvCheckpoint = 'https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/chord_pitches_improv'
-const melodyCheckpoint = 'https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn'
-
-const melodyRNN = new mm.MusicRNN(melodyCheckpoint)
 const improvRNN = new mm.MusicRNN(improvCheckpoint)
+
 const synth = new Tone.DuoSynth().toMaster()
 const { Note } = Tonal
 
