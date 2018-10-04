@@ -1,6 +1,3 @@
-// https://github.com/tensorflow/magenta-js/tree/master/music/checkpoints
-// https://github.com/tensorflow/tfjs/issues/424
-// https://github.com/tensorflow/magenta-js/blob/master/music/demos/common.ts
 const improvCheckpoint = 'https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/chord_pitches_improv'
 const improvRNN = new mm.MusicRNN(improvCheckpoint)
 
@@ -62,16 +59,27 @@ const startProgram = async () => {
   try {
     await improvRNN.initialize()
     let improvisedMelody = await improvRNN.continueSequence(quantizedSequence, 60, 1.1, ['Bm', 'Bbm', 'Gb7', 'F7', 'Ab', 'Ab7', 'G7', 'Gb7', 'F7', 'Bb7', 'Eb7', 'AM7'])
-    console.log('improvisedMelody', improvisedMelody)
-    sequence.notes.forEach(note => {
-      synth.triggerAttackRelease(Note.fromMidi(note.pitch), note.endTime - note.startTime, note.startTime)
-    })
 
-    setTimeout(() => {
+    const playOriginalMelody = () => {
+      sequence.notes.forEach(note => {
+        synth.triggerAttackRelease(Note.fromMidi(note.pitch), note.endTime - note.startTime, note.startTime)
+      })
+    }
+
+    const playGeneratedMelody = () => {
       improvisedMelody.notes.forEach(note => {
         synth.triggerAttackRelease(Note.fromMidi(note.pitch), note.quantizedEndStep - note.quantizedStartStep, note.quantizedStartStep)
       })
-    }, 2000)
+    }
+
+    const originalMelodyButton = document.getElementById('original')
+    const generatedMelodyButton = document.getElementById('generated')
+    originalMelodyButton.onclick = () => {
+      playOriginalMelody()
+    }
+    generatedMelodyButton.onclick = () => {
+      playGeneratedMelody()
+    }
 
   } catch (error) {
     console.error(error)
